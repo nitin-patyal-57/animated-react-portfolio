@@ -4,8 +4,7 @@
   "description": "Backend for Nitin Patyal Portfolio",
   "main": "index.js",
   "type": "commonjs",
-  "scripts": {
-    "dev": "node index.js",         
+  "scripts": {        
     "start": "node index.js"        
   },
   "keywords": ["portfolio", "backend", "nodejs", "express", "nodemailer"],
