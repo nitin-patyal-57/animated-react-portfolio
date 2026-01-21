@@ -1,15 +1,41 @@
-# dependencies
+# ===============================
+# Node / Package Managers
+# ===============================
 node_modules/
-backend/node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# environment variables
+# ===============================
+# Environment Variables (IMPORTANT)
+# ===============================
 .env
-backend/.env
+.env.local
+.env.development
+.env.production
 
-# build output
+# ===============================
+# Build Outputs
+# ===============================
 dist/
 build/
+.vite/
 
-# OS files
+# ===============================
+# Logs
+# ===============================
+logs/
+*.log
+
+# ===============================
+# OS / Editor Files
+# ===============================
 .DS_Store
+Thumbs.db
+.vscode/
+.idea/
 
+# ===============================
+# Optional (safe to ignore)
+# ===============================
+coverage/

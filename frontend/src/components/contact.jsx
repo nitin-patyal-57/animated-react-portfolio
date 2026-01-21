@@ -13,11 +13,11 @@ export default function Contact() {
 
     try {
       const res = await fetch(
-        "https://YOUR-BACKEND-URL.onrender.com/api/contact",
+        "https://animated-react-portfolio-9.onrender.com/api/contact",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, message }),
+          body: JSON.stringify(formData),
         }
       );
 

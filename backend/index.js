@@ -1,31 +1,27 @@
-// backend/index.js
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
-const path = require("path"); // ✅ REQUIRED
+const path = require("path");
 
 dotenv.config();
 
 const app = express();
-const PORT = Number(process.env.PORT) || 4000;
+const PORT = process.env.PORT || 10000;
 
-// ================= MIDDLEWARES =================
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST"],
-}));
+// ================= MIDDLEWARE =================
+app.use(cors());
 app.use(express.json());
 
-// ================= SERVE FRONTEND =================
-// ✅ This must be OUTSIDE routes
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
 // ================= TEST ROUTES =================
+app.get("/", (req, res) => {
+  res.send("Backend running successfully 🚀");
+});
+
 app.get("/api/test", (req, res) => {
-  res.status(200).json({
+  res.json({
     success: true,
-    message: "Frontend connected successfully 🚀",
+    message: "API working fine",
   });
 });
 
@@ -49,35 +45,24 @@ app.post("/api/contact", async (req, res) => {
       },
     });
 
-    const mailOptions = {
+    await transporter.sendMail({
       from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       replyTo: email,
-      subject: `New Portfolio Message from ${name}`,
-      text: `
-Name: ${name}
-Email: ${email}
-
-Message:
-${message}
-      `,
+      subject: `New Message from ${name}`,
       html: `
-        <h2>New Contact Message</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong></p>
+        <h3>Name: ${name}</h3>
+        <h3>Email: ${email}</h3>
         <p>${message}</p>
       `,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
-
-    res.status(200).json({
+    res.json({
       success: true,
       message: "Message sent successfully!",
     });
   } catch (error) {
-    console.error("Email error:", error);
+    console.error("Mail error:", error);
     res.status(500).json({
       success: false,
       error: "Email service failed",
@@ -85,13 +70,14 @@ ${message}
   }
 });
 
-// ================= REACT ROUTER FIX =================
-// ✅ Must be LAST
+// ================= SERVE FRONTEND =================
+app.use(express.static(path.join(__dirname, "../dist")));
+
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
 // ================= START SERVER =================
 app.listen(PORT, () => {
-  console.log(`✅ Backend server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
