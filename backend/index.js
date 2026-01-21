@@ -17,6 +17,12 @@ app.use(cors({
 app.use(express.json());
 
 // ================= TEST ROUTE =================
+
+app.get("/", (req, res) => {
+  res.send("Backend running successfully 🚀");
+});
+
+
 app.get("/api/test", (req, res) => {
   res.status(200).json({
     success: true,
@@ -35,6 +41,15 @@ app.post("/api/contact", async (req, res) => {
       error: "All fields are required",
     });
   }
+
+  // Serve React frontend
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+// Catch-all for React Router
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+});
+
 
   try {
     // 2️⃣ Create transporter
