@@ -10,7 +10,10 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 // ================= MIDDLEWARE =================
-app.use(cors());
+app.use(cors({
+     origin: "https://animated-react-portfolio-14.onrender.com",
+  methods: ["GET", "POST"]
+}));
 app.use(express.json());
 
 // ================= TEST ROUTES =================
