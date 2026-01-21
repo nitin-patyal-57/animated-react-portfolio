@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
+const path = require("path"); // ✅ REQUIRED
 
 dotenv.config();
 
@@ -11,18 +12,16 @@ const PORT = Number(process.env.PORT) || 4000;
 
 // ================= MIDDLEWARES =================
 app.use(cors({
-  origin: "*", // allow frontend access (localhost/dev)
+  origin: "*",
   methods: ["GET", "POST"],
 }));
 app.use(express.json());
 
-// ================= TEST ROUTE =================
+// ================= SERVE FRONTEND =================
+// ✅ This must be OUTSIDE routes
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-app.get("/", (req, res) => {
-  res.send("Backend running successfully 🚀");
-});
-
-
+// ================= TEST ROUTES =================
 app.get("/api/test", (req, res) => {
   res.status(200).json({
     success: true,
@@ -34,7 +33,6 @@ app.get("/api/test", (req, res) => {
 app.post("/api/contact", async (req, res) => {
   const { name, email, message } = req.body;
 
-  // 1️⃣ Validation
   if (!name || !email || !message) {
     return res.status(400).json({
       success: false,
@@ -42,26 +40,15 @@ app.post("/api/contact", async (req, res) => {
     });
   }
 
-  // Serve React frontend
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-// Catch-all for React Router
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-});
-
-
   try {
-    // 2️⃣ Create transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // Gmail App Password (NOT normal password)
+        pass: process.env.EMAIL_PASS,
       },
     });
 
-    // 3️⃣ Email content
     const mailOptions = {
       from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
@@ -83,22 +70,25 @@ ${message}
       `,
     };
 
-    // 4️⃣ Send mail
     await transporter.sendMail(mailOptions);
 
-    // 5️⃣ Response
     res.status(200).json({
       success: true,
       message: "Message sent successfully!",
     });
   } catch (error) {
     console.error("Email error:", error);
-
     res.status(500).json({
       success: false,
       error: "Email service failed",
     });
   }
+});
+
+// ================= REACT ROUTER FIX =================
+// ✅ Must be LAST
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 // ================= START SERVER =================
