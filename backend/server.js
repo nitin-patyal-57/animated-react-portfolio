@@ -16,6 +16,7 @@ mongoose
   .connect(process.env.MONGO_URI)
 
   console.log("MongoDB connected")
+
   .then(() => {
     app.listen(4000, () =>
       console.log("Backend running on http://localhost:4000")
