@@ -1,8 +1,9 @@
+// backend/index.js
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
-const path = require("path");
+const path = require("path"); // keep path for serving frontend
 
 dotenv.config();
 
@@ -10,10 +11,12 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 // ================= MIDDLEWARE =================
-app.use(cors({
-     origin: "https://animated-react-portfolio-14.onrender.com",
-  methods: ["GET", "POST"]
-}));
+app.use(
+  cors({
+    origin: "https://animated-react-portfolio-14.onrender.com", // frontend URL
+    methods: ["GET", "POST"],
+  })
+);
 app.use(express.json());
 
 // ================= TEST ROUTES =================
@@ -22,9 +25,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/test", (req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
-    message: "API working fine",
+    message: "Frontend connected successfully 🚀",
   });
 });
 
@@ -32,6 +35,7 @@ app.get("/api/test", (req, res) => {
 app.post("/api/contact", async (req, res) => {
   const { name, email, message } = req.body;
 
+  // 1️⃣ Validation
   if (!name || !email || !message) {
     return res.status(400).json({
       success: false,
@@ -40,32 +44,47 @@ app.post("/api/contact", async (req, res) => {
   }
 
   try {
+    // 2️⃣ Create transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        pass: process.env.EMAIL_PASS, // Gmail App Password (NOT normal password)
       },
     });
 
-    await transporter.sendMail({
+    // 3️⃣ Email content
+    const mailOptions = {
       from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       replyTo: email,
-      subject: `New Message from ${name}`,
+      subject: `New Portfolio Message from ${name}`,
+      text: `
+Name: ${name}
+Email: ${email}
+
+Message:
+${message}
+      `,
       html: `
-        <h3>Name: ${name}</h3>
-        <h3>Email: ${email}</h3>
+        <h2>New Contact Message</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Message:</strong></p>
         <p>${message}</p>
       `,
-    });
+    };
 
-    res.json({
+    // 4️⃣ Send mail
+    await transporter.sendMail(mailOptions);
+
+    // 5️⃣ Response
+    res.status(200).json({
       success: true,
       message: "Message sent successfully!",
     });
   } catch (error) {
-    console.error("Mail error:", error);
+    console.error("Email error:", error);
     res.status(500).json({
       success: false,
       error: "Email service failed",

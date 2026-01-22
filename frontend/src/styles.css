@@ -499,6 +499,27 @@ section h2 {
 }
 
 /* ================= PROJECTS ================= */
+
+.project-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.project-links a {
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #1e293b;
+  color: #fff;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.project-links a:hover {
+  background: #38bdf8;
+  color: #020617;
+}
+
 .projects {
   padding: 120px 10%;
 }

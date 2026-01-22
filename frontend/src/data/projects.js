@@ -4,6 +4,8 @@ const projects = [
     description:
       "A complete flight booking, payment, and cancellation system with a professional UI and backend integration.",
     tech: ["React", "Node.js", "SQL"],
+        github: "https://github.com/nitin-patyal-57/AirlineManagementProject",
+    live: "",
     featured: true,
   },
   {
