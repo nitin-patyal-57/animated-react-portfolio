@@ -164,9 +164,19 @@ export default function App() {
         <motion.h2 initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>Certificates</motion.h2>
         <div className="grid">
           {[
-            { title: "Full Stack Web Development", file: "frontend/public/certificates/webdevelopmentcourse_page-0001.jpg" },
-            { title: "6 Months Internship - WhiteHat Coder", file: "frontend/public/certificates/Nitin Patyal Offer Letter_page-0001.jpg" },
-            { title: "AWS Cloud Operations", file: "frontend/public/certificates/AWS_Academy_Graduate___AWS_Academy_Cloud_Operations_Badge20250212-27-ibdvs_page-0001.jpg" },
+            { 
+  title: "Full Stack Web Development", 
+  file: "/certificates/webdevelopmentcourse_page-0001.jpg" 
+},
+{ 
+  title: "6 Months Internship - WhiteHat Coder", 
+  file: "/certificates/Nitin Patyal Offer Letter_page-0001.jpg" 
+},
+{ 
+  title: "AWS Cloud Operations", 
+  file: "/certificates/AWS_Academy_Graduate___AWS_Academy_Cloud_Operations_Badge20250212-27-ibdvs_page-0001.jpg" 
+}
+
           ].map((cert, index) => (
             <motion.a key={index} href={cert.file} target="_blank" rel="noreferrer" className="card" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ scale: 1.05 }} transition={{ duration: 0.4 }} viewport={{ once: true }}>
               <span style={{ fontSize: "2.5rem" }}>🎯</span>
