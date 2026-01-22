@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 10000;
 // ================= MIDDLEWARE =================
 app.use(
   cors({
-    origin: "https://animated-react-portfolio-16.onrender.com", // frontend URL
+    origin: "https://animated-react-portfolio-14.onrender.com", // frontend URL
     methods: ["GET", "POST"],
   })
 );
